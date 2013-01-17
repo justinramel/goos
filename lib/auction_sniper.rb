@@ -1,0 +1,3 @@
+class AuctionSniper
+
+end
