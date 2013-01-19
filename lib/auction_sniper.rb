@@ -1,3 +1,14 @@
-class AuctionSniper
+require 'java'
 
-end
+require 'swing'
+require 'awt'
+require 'jconcurrent'
+
+require 'smack'
+require 'window_licker'
+require 'hamcrest'
+
+
+require 'auction_sniper/auction_sniper'
+require 'auction_sniper/main'
+require 'auction_sniper/ui/main_window'

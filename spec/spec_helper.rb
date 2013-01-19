@@ -4,10 +4,13 @@
 # loaded once.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
-require 'lib/smack'
 
 require 'lib/auction_sniper'
+
+require 'spec/end_to_end/auction_sniper_driver'
 require 'spec/end_to_end/fake_auction_server'
+require 'spec/end_to_end/application_runner'
+require 'spec/end_to_end/single_message_listener'
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
