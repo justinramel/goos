@@ -1,4 +1,5 @@
 class ApplicationRunner
+  SNIPER_XMPP_ID  = 'sniper@localhost/Auction'
   XMPP_HOSTNAME   = 'localhost'
   SNIPER_ID       = 'sniper'
   SNIPER_PASSWORD = 'sniper'
@@ -21,6 +22,10 @@ class ApplicationRunner
 
   def shows_sniper_has_lost_auction
     @driver.shows_sniper_status(AuctionSniper::MainWindow::STATUS_LOST)
+  end
+
+  def has_shown_sniper_is_bidding
+    @driver.shows_sniper_status(AuctionSniper::MainWindow::STATUS_BIDDING)
   end
 
   def stop

@@ -5,7 +5,10 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
-require 'lib/auction_sniper'
+require 'fakes-rspec'
+
+require 'auction_sniper'
+require 'auction_sniper/auction_message_translator'
 
 require 'spec/end_to_end/auction_sniper_driver'
 require 'spec/end_to_end/fake_auction_server'

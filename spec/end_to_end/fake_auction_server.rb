@@ -4,6 +4,8 @@ class FakeAuctionServer
   XMPP_HOSTNAME = 'localhost'
   AUCTION_PASSWORD = 'auction'
 
+  include RSpec::Matchers
+
   attr_reader :item_id, :current_chat
 
   def initialize(item_id)
@@ -23,16 +25,35 @@ class FakeAuctionServer
     end
   end
 
-  def has_received_join_request_from_sniper
-    @message_listener.receives_a_message
+  def report_price(price, increment, bidder)
+    @current_chat.send_message("SOLVersion: 1.1; Event: PRICE; " +
+                               "CurrentPrice: #{price}; Increment: #{increment}; " +
+                               "Bidder: #{bidder};")
+  end
+
+  def has_received_join_request_from(sniper_id)
+    receives_a_message_matching(
+      sniper_id, eq(AuctionSniper::Main::JOIN_COMMAND_FORMAT))
+  end
+
+  def has_received_bid(bid, sniper_id)
+    receives_a_message_matching(sniper_id,
+                                eq(Auction::BID_COMMAND_FORMAT % bid))
   end
 
   def announce_closed
-    current_chat.send_message(Smack::Message.new)
+    current_chat.send_message('SOLVersion: 1.1; Event: CLOSE;')
   end
 
   def stop
     @connection.disconnect
   end
+
+  private
+  def receives_a_message_matching(sniper_id, matcher)
+    @message_listener.receives_a_message(matcher)
+    @current_chat.participant.should == sniper_id
+  end
+
 
 end
