@@ -11,13 +11,25 @@ class AuctionSniper
       end
     end
 
+    class Auction
+      def bid(amount)
+
+      end
+    end
+
     def join_auction(connection, item_id)
       disconnect_when_ui_closes(connection)
       chat = connection.get_chat_manager.
         create_chat(auction_id(item_id, connection),
-                    AuctionMessageTranslator.new(self))
+                    AuctionMessageTranslator.new(AuctionSniper.new(Auction.new, self)))
       @not_to_be_garbage_collected = chat
       chat.send_message(JOIN_COMMAND_FORMAT)
+    end
+
+    def sniper_lost
+      Swing::SwingUtilities.invoke_later do
+        @ui.show_status(MainWindow::STATUS_LOST)
+      end
     end
 
     def auction_id(item_id, connection)

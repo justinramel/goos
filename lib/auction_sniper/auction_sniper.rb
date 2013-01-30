@@ -1,4 +1,18 @@
 class AuctionSniper
+  def initialize(auction, listener)
+    @auction  = auction
+    @listener = listener
+  end
+
+  def auction_closed
+    @listener.sniper_lost
+  end
+
+  def current_price(price, increment)
+    @auction.bid(price + increment)
+    @listener.sniper_bidding
+  end
+
   def self.start(hostname, sniper_id, password, item_id)
     main = Main.new
     main.start_user_interface
