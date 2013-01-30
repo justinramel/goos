@@ -38,7 +38,7 @@ class FakeAuctionServer
 
   def has_received_bid(bid, sniper_id)
     receives_a_message_matching(sniper_id,
-                                eq(Auction::BID_COMMAND_FORMAT % bid))
+                                eq(AuctionSniper::Main::BID_COMMAND_FORMAT % bid))
   end
 
   def announce_closed
@@ -54,6 +54,5 @@ class FakeAuctionServer
     @message_listener.receives_a_message(matcher)
     @current_chat.participant.should == sniper_id
   end
-
 
 end
