@@ -12,33 +12,15 @@ class AuctionSniper
       end
     end
 
-    class Auction
-      def initialize(chat)
-        @chat = chat
-      end
-
-      def bid(amount)
-        send_message(AuctionSniper::Main::BID_COMMAND_FORMAT % amount)
-      end
-
-      private
-      def send_message(message)
-        @chat.send_message(message)
-      rescue XMPPException => e
-        puts e.message
-      end
-
-    end
-
     def join_auction(connection, item_id)
       disconnect_when_ui_closes(connection)
       chat = connection.get_chat_manager.
         create_chat(auction_id(item_id, connection), nil)
-      auction = Auction.new(chat)
+      auction = XMPPAuction.new(chat)
       chat.add_message_listener(
                     AuctionMessageTranslator.new(AuctionSniper.new(auction, self)))
       @not_to_be_garbage_collected = chat
-      chat.send_message(JOIN_COMMAND_FORMAT)
+      auction.join
     end
 
     def sniper_lost
