@@ -18,26 +18,47 @@ class AuctionSniper
         create_chat(auction_id(item_id, connection), nil)
       auction = XMPPAuction.new(chat)
       chat.add_message_listener(
-                    AuctionMessageTranslator.new(AuctionSniper.new(auction, self)))
+                    AuctionMessageTranslator.new(
+                      AuctionSniper.new(auction,
+                                        SniperStateDisplayer.new(@ui))))
       @not_to_be_garbage_collected = chat
       auction.join
-    end
-
-    def sniper_lost
-      Swing::SwingUtilities.invoke_later do
-        @ui.show_status(MainWindow::STATUS_LOST)
-      end
-    end
-
-    def sniper_bidding
-      Swing::SwingUtilities.invoke_later do
-        @ui.show_status(MainWindow::STATUS_BIDDING)
-      end
     end
 
     def auction_id(item_id, connection)
       AUCTION_ID_FORMAT % [item_id, connection.get_service_name]
     end
+
+    class SniperStateDisplayer
+
+      def initialize(ui)
+        @ui = ui
+      end
+
+      def sniper_bidding
+        Swing::SwingUtilities.invoke_later do
+          show_status(MainWindow::STATUS_BIDDING)
+        end
+      end
+
+      def sniper_lost
+        Swing::SwingUtilities.invoke_later do
+          show_status(MainWindow::STATUS_LOST)
+        end
+      end
+
+      def sniper_winning
+        Swing::SwingUtilities.invoke_later do
+          show_status(MainWindow::STATUS_WINNING)
+        end
+      end
+
+      private
+      def show_status(status)
+        Swing::SwingUtilities.invoke_later { @ui.show_status(status) }
+      end
+    end
+
 
     def disconnect_when_ui_closes(connection)
       window_adapter = WindowAdapter.new
