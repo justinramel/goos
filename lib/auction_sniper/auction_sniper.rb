@@ -1,16 +1,22 @@
 class AuctionSniper
   def initialize(auction, listener)
-    @auction  = auction
-    @listener = listener
+    @auction    = auction
+    @listener   = listener
+    @is_winning = false
   end
 
   def auction_closed
-    @listener.sniper_lost
+    @is_winning ? @listener.sniper_won : @listener.sniper_lost
   end
 
-  def current_price(price, increment)
-    @auction.bid(price + increment)
-    @listener.sniper_bidding
+  def current_price(price, increment, price_source)
+    @is_winning = price_source == :from_sniper
+    if @is_winning
+      @listener.sniper_winning
+    else
+      @auction.bid(price + increment)
+      @listener.sniper_bidding
+    end
   end
 
   def self.start(hostname, sniper_id, password, item_id)

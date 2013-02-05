@@ -24,8 +24,16 @@ class ApplicationRunner
     @driver.shows_sniper_status(AuctionSniper::MainWindow::STATUS_LOST)
   end
 
+  def shows_sniper_has_won_auction
+    @driver.shows_sniper_status(AuctionSniper::MainWindow::STATUS_WON)
+  end
+
   def has_shown_sniper_is_bidding
     @driver.shows_sniper_status(AuctionSniper::MainWindow::STATUS_BIDDING)
+  end
+
+  def has_shown_sniper_is_winning
+    @driver.shows_sniper_status(AuctionSniper::MainWindow::STATUS_WINNING)
   end
 
   def stop

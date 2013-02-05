@@ -1,7 +1,8 @@
 class AuctionSniper
   class AuctionMessageTranslator
-    def initialize(listener)
-      @listener = listener
+    def initialize(sniper_id, listener)
+      @sniper_id = sniper_id
+      @listener  = listener
     end
 
     def process_message(chat, message)
@@ -10,7 +11,9 @@ class AuctionSniper
       if event_type == "CLOSE"
         @listener.auction_closed
       elsif event_type == "PRICE"
-        @listener.current_price(event.current_price, event.increment)
+        @listener.current_price(event.current_price,
+                                event.increment,
+                                event.is_from(@sniper_id))
       end
     end
 
@@ -48,14 +51,14 @@ class AuctionSniper
         @unpacked_message.fetch("Increment").to_i
       end
 
+      def is_from(sniper_id)
+        sniper_id == bidder ? :from_sniper : :from_other_bidder
+      end
 
-      #def method_missing(attribute, *args, &block)
-        #value = @unpacked_message.fetch(attribute.to_s.classify)
-        #return value.to_i if INTEGER_ATTRIBUTES.include?(attribute)
-        #value
-      #rescue IndexError
-        #super
-      #end
+      def bidder
+        @unpacked_message.fetch("Bidder")
+      end
+
     end
   end
 end

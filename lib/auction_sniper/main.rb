@@ -19,6 +19,7 @@ class AuctionSniper
       auction = XMPPAuction.new(chat)
       chat.add_message_listener(
                     AuctionMessageTranslator.new(
+                      connection.get_user,
                       AuctionSniper.new(auction,
                                         SniperStateDisplayer.new(@ui))))
       @not_to_be_garbage_collected = chat
@@ -44,6 +45,12 @@ class AuctionSniper
       def sniper_lost
         Swing::SwingUtilities.invoke_later do
           show_status(MainWindow::STATUS_LOST)
+        end
+      end
+
+      def sniper_won
+        Swing::SwingUtilities.invoke_later do
+          show_status(MainWindow::STATUS_WON)
         end
       end
 
